@@ -21,16 +21,16 @@ public:
 
 public:
     void addSQLTablewidget(QString name,QString time,int price ,int num,int price_count);
-    void searchSQLTablewidget();
+    void SQLTablewidgetShow();
     bool connectSQL();
-    void updateTableWidget(QString name,QString time,int price ,int num,int price_count);
+    void updateTableWidget(int row,QString name,QString time,int price ,int num,int price_count);
     void deleteTableWidget(int rowcur);
 
-    void settableWidgetData(QVector<sql_struct::tableWidget_data> data);
-    QVector<sql_struct::tableWidget_data> getTableWidgetData();
+    void settableWidgetData(QSqlTableModel* model);
+    void setSQLTable(QString name,QString time,int price ,int num,int price_count);
+    QSqlTableModel*  getTableWidgetData();
 
-signals:
-    void tableWidgetData(int id,QString name,QString time,int price ,int num,int price_count);
+
 
 private:
 
@@ -50,7 +50,7 @@ private:
     sql_struct::tableWidget_data data;
     QVector<sql_struct::tableWidget_data> data_vec;
 
-    QVector<sql_struct::tableWidget_data> data_tablewidget;
+    QSqlTableModel* data_tablewidget;
 
 
 };

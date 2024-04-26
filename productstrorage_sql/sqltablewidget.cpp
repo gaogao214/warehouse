@@ -10,6 +10,8 @@
 
 #pragma execution_character_set("utf-8");
 
+#define QSQLTABLEMODEL_FLAG
+
 sqlTableWidget::sqlTableWidget()
 {
     if(QSqlDatabase::contains("qt_sql_default_connection"))
@@ -21,11 +23,22 @@ sqlTableWidget::sqlTableWidget()
           // db = QSqlDatabase::addDatabase("QSQLITE");
         connectSQL();
     }
-    searchSQLTablewidget();
+    SQLTablewidgetShow();
 }
 
 void sqlTableWidget::addSQLTablewidget(QString name,QString time,int price ,int num,int price_count)
 {
+#ifdef QSQLTABLEMODEL_FLAG
+    QSqlRecord record = model->record();
+    record.setValue(0,name);//商品名称
+    record.setValue(1,time);//添加日期
+    record.setValue(2,price);//商品价格
+    record.setValue(3,num);//商品数量
+    record.setValue(4,price_count);//总价
+    model->insertRecord(model->rowCount(), record);//添加至Model
+    model->submitAll();//提交
+#elif
+
     //========================================👇清空数据库－》创建student表========================================================
     QSqlQuery query;
     QSqlQuery sql_query;
@@ -49,10 +62,28 @@ void sqlTableWidget::addSQLTablewidget(QString name,QString time,int price ,int 
     query.bindValue(":num", num );    //入库数量
     query.bindValue(":pricecount", price_count );                //入库总价
     query.exec();               //加入库中
+
+#endif
 }
 
-void sqlTableWidget::searchSQLTablewidget()
+void sqlTableWidget::SQLTablewidgetShow()
 {
+#ifdef QSQLTABLEMODEL_FLAG
+    //使用QSqlTableModel 方法
+    model = new QSqlTableModel(this);
+    model->setTable("students");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+
+
+    //不显示第二列
+    //model->removeColumn(1);
+
+    //查询整张表
+    model->select();
+
+    settableWidgetData(model);
+
+#elif
     QSqlQuery sql_query;
     // qDebug()<<tr("database connection name:%1").arg(db.connectionName());
     if(QSqlDatabase::contains("qt_sql_default_connection"))
@@ -70,7 +101,7 @@ void sqlTableWidget::searchSQLTablewidget()
         {
             while(sql_query.next())
             {
-                data.name = sql_query.value(0).toInt();
+                data.name = sql_query.value(0).toString();
                 data.time = sql_query.value(1).toString();
                 data.price = sql_query.value(2).toInt();
                 data.num = sql_query.value(3).toInt();
@@ -87,6 +118,8 @@ void sqlTableWidget::searchSQLTablewidget()
     {
         db = QSqlDatabase::addDatabase("QSQLITE");
     }
+
+#endif
 }
 
 bool sqlTableWidget::connectSQL()
@@ -111,28 +144,52 @@ bool sqlTableWidget::connectSQL()
 }
 
 //修改
-void sqlTableWidget::updateTableWidget(QString name,QString time,int price ,int num,int price_count)
+void sqlTableWidget::updateTableWidget(int row,QString name,QString time,int price ,int num,int price_count)
 {
+#ifdef QSQLTABLEMODEL_FLAG
+
+    // if(name.isEmpty() || tatal <= 0)
+    // {
+    //     QMessageBox::information(this,"提示","修改失败,数据为空");
+    //     return;
+    // }
+
+    // int curRow = tableView->currentIndex().row();
+    QSqlRecord record = model->record(row);
+    record.setValue(0,name);
+    record.setValue(1,time);
+    record.setValue(2,price);
+    record.setValue(3,num);
+    record.setValue(4,price_count);
+
+
+    if(model->setRecord(row, record))
+    {
+        model->submitAll();
+    }
+
+#elif
     if(QSqlDatabase::contains("qt_sql_default_connection"))
     {
-            db = QSqlDatabase::database("qt_sql_default_connection");
+        db = QSqlDatabase::database("qt_sql_default_connection");
 
-            QSqlQuery query(db);
-            if(query.exec(QString("update students set 时间='%1' ,价格='%2',数量='%3',总价= '%4' where 商品名称=%5")
-                               .arg(time).arg(price).arg(num).arg(price_count).arg(name)))
-            {
-                qDebug("update data success");
-            }
-            else
-            {
-                qDebug()<<"error"<<query.lastError();
-            }
+        QSqlQuery query(db);
+        if(query.exec(QString("update students set 时间='%1' ,价格='%2',数量='%3',总价= '%4' where 商品名称=%5")
+                           .arg(time).arg(price).arg(num).arg(price_count).arg(name)))
+        {
+            qDebug("update data success");
+        }
+        else
+        {
+            qDebug()<<"error"<<query.lastError();
+        }
     }
     else
     {
         db = QSqlDatabase::addDatabase("QSQLITE");
     }
 
+#endif
 }
 
 //删除选中行
@@ -161,12 +218,18 @@ void sqlTableWidget::deleteTableWidget(int rowcur)
 
 }
 
-void sqlTableWidget::settableWidgetData(QVector<tableWidget_data> data)
+void sqlTableWidget::settableWidgetData(QSqlTableModel* model)
 {
-    data_tablewidget = data;
+    data_tablewidget = new QSqlTableModel(this);
+    data_tablewidget = model;
 }
 
-QVector<tableWidget_data> sqlTableWidget::getTableWidgetData()
+void sqlTableWidget::setSQLTable(QString name, QString time, int price, int num, int price_count)
+{
+
+}
+
+QSqlTableModel*  sqlTableWidget::getTableWidgetData()
 {
     return data_tablewidget;
 }

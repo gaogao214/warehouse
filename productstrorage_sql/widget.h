@@ -11,8 +11,8 @@
 #include <QtSql/QSqlDatabase>
 #include <QDebug>
 
-#include "product_strorage.h"
-#include "saleProduct.h"
+#include "product_strorage/product_strorage.h"
+#include "product_sale/saleProduct.h"
 #include "inventory.h"
 #include "earnings.h"
 #include "sqltablewidget.h"

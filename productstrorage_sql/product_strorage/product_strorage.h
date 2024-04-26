@@ -10,7 +10,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QTableWidget>
-
+#include <QStandardItemModel>
 #include "add_product.h"
 #include "profile.h"
 #include "sqltablewidget.h"
@@ -37,6 +37,8 @@ private:
 private slots:
     void addProductTableWidget();  //添加按钮
     void readProfileTableWidget(QStringList strlist);//读取配置文件到tablewidget
+    void onTableClicked();
+
 
 
 private:
@@ -51,7 +53,8 @@ private:
 
     QComboBox* m_pdate_combobox = nullptr;//添加日期
 
-    QTableWidget* m_ptable_strorage = nullptr;//入库表格
+    QTableView* m_ptable_strorage = nullptr;//入库表格
+    QStandardItemModel* m_pTableViewModel     = nullptr;//tableview 添加模型
 
 
     Profile* m_pProfile = nullptr;
@@ -60,7 +63,7 @@ private:
 
     sqlTableWidget* sql_ = nullptr;
 
-    QVector<sql_struct::tableWidget_data> tablewidget_data;
+    QSqlTableModel* tablewidget_data;
 
 };
 

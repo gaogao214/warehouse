@@ -14,9 +14,7 @@ SOURCES += \
     earnings.cpp \
     inventory.cpp \
     main.cpp \
-    product_strorage.cpp \
     profile.cpp \
-    saleProduct.cpp \
     sqltablewidget.cpp \
     widget.cpp
 
@@ -24,11 +22,13 @@ HEADERS += \
     add_product.h \
     earnings.h \
     inventory.h \
-    product_strorage.h \
     profile.h \
-    saleProduct.h \
     sqltablewidget.h \
     widget.h
+
+include(product_sale/saleProduct.pri)
+include(product_strorage/product_strorage.pri)
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

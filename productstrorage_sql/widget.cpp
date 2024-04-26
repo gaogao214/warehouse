@@ -32,8 +32,8 @@ Widget::Widget(QWidget *parent)
     rightLayout->addWidget(stackedWidget);
     horizontalLayout->addWidget(mainWidget);
 
-    initNav();
-    initMain();
+    initNav();//初始化左侧按钮
+    initMain();//初始化右侧界面
 
 }
 
