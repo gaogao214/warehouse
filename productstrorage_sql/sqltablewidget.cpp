@@ -131,7 +131,7 @@ bool sqlTableWidget::connectSQL()
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     QSqlQuery sql_query;
 
-    db.setDatabaseName("./StudentDB.db"); // 建立链接（链接一个数据库文件）
+    db.setDatabaseName("./productDB.db"); // 建立链接（链接一个数据库文件）
     if(!db.open())
     {
         return false;
@@ -155,6 +155,7 @@ void sqlTableWidget::updateTableWidget(int row,QString name,QString time,int pri
     // }
 
     // int curRow = tableView->currentIndex().row();
+    qDebug()<<"row:"<<row;
     QSqlRecord record = model->record(row);
     record.setValue(0,name);
     record.setValue(1,time);
@@ -195,6 +196,13 @@ void sqlTableWidget::updateTableWidget(int row,QString name,QString time,int pri
 //删除选中行
 void sqlTableWidget::deleteTableWidget(int rowcur)
 {
+#ifdef QSQLTABLEMODEL_FLAG
+    //使用QSqlTableModel 方法
+    model->removeRow(rowcur);
+    model->submitAll(); //否则提交，在数据库中删除改行
+
+#elif
+
     if(QSqlDatabase::contains("qt_sql_default_connection"))
     {
         db = QSqlDatabase::database("qt_sql_default_connection");
@@ -216,6 +224,7 @@ void sqlTableWidget::deleteTableWidget(int rowcur)
         db = QSqlDatabase::addDatabase("QSQLITE");
     }
 
+#endif
 }
 
 void sqlTableWidget::settableWidgetData(QSqlTableModel* model)
@@ -232,6 +241,31 @@ void sqlTableWidget::setSQLTable(QString name, QString time, int price, int num,
 QSqlTableModel*  sqlTableWidget::getTableWidgetData()
 {
     return data_tablewidget;
+}
+
+//搜索
+void sqlTableWidget::searchTableView(QString name)
+{
+    QString product_name =  QString(u8"商品名称 = '%1'").arg(name);
+    // QString date = QString("date = '%1'").arg(dateEdit->date().toString("yyyy-MM-dd"));
+    QString strFilter = "";
+    if(!name.isEmpty())
+    {
+        strFilter.append(product_name);
+    }
+    //如需要日期查询请取消注释
+    //    if(!dateEdit->text().isEmpty())
+    //    {
+    //        if(!strFilter.isEmpty())
+    //        {
+    //            strFilter.append(" and ");
+    //        }
+    //        strFilter.append(date);
+    //    }
+    model->setFilter(strFilter);
+    // ui->tableView->setModel(model);
+    model->select();
+    settableWidgetData(model);
 }
 
 

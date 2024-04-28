@@ -29,17 +29,13 @@ signals:
     void sig_flushTableitem();
 
 private:
-    void amendproductTableWidget();
-    void removeTableWidget();
-    void searchTableWidget();
+    void amendproductTableWidget();//修改
+    void removeTableWidget();//删除
+    void searchTableWidget();//搜索
+    void tableWidgetShow(); //数据库显示在tableview
 
-    void tableWidgetShow();
 private slots:
     void addProductTableWidget();  //添加按钮
-    void readProfileTableWidget(QStringList strlist);//读取配置文件到tablewidget
-    void onTableClicked();
-
-
 
 private:
     QPushButton* m_pbutton_add = nullptr;//添加产品
@@ -56,14 +52,11 @@ private:
     QTableView* m_ptable_strorage = nullptr;//入库表格
     QStandardItemModel* m_pTableViewModel     = nullptr;//tableview 添加模型
 
-
-    Profile* m_pProfile = nullptr;
-
-    // QString m_pstrorageProfileName = "C:/Users/gaohuan/Documents/data/strorage_data.csv";
-
     sqlTableWidget* sql_ = nullptr;
 
-    QSqlTableModel* tablewidget_data;
+    QSqlTableModel* tablewidget_data = nullptr; // 数据库model
+
+    int selete_row = 0;//tableview 选中的行数
 
 };
 

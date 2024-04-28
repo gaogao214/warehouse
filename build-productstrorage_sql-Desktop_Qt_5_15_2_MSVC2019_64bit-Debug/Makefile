@@ -246,6 +246,7 @@ Makefile: ..\productstrorage_sql\productstrorage_sql.pro D:\Qt2\5.15.2\msvc2019_
 		D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\win32\default_pre.prf \
 		..\productstrorage_sql\product_sale\saleProduct.pri \
 		..\productstrorage_sql\product_strorage\product_strorage.pri \
+		..\productstrorage_sql\sql_tableview\sqltablewidget.pri \
 		D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\resolve_config.prf \
 		D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\exclusive_builds_post.prf \
 		D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\default_post.prf \
@@ -445,6 +446,7 @@ D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\default_pre.prf:
 D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\win32\default_pre.prf:
 ..\productstrorage_sql\product_sale\saleProduct.pri:
 ..\productstrorage_sql\product_strorage\product_strorage.pri:
+..\productstrorage_sql\sql_tableview\sqltablewidget.pri:
 D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\resolve_config.prf:
 D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\exclusive_builds_post.prf:
 D:\Qt2\5.15.2\msvc2019_64\mkspecs\features\default_post.prf:

@@ -8,7 +8,10 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QComboBox>
-#include <QTableWidget>
+// #include <QTableWidget>
+#include <QTableView>
+#include <QHeaderView>
+#include <QStandardItemModel>
 
 #include "add_product.h"
 #include "profile.h"
@@ -41,12 +44,14 @@ private:
 
     QComboBox* m_pdate_combobox = nullptr;//添加日期
 
-    QTableWidget* m_ptable_strorage = nullptr;//入库表格
+    QTableView* m_ptable_strorage = nullptr;//入库表格
 
 
-    Profile* m_pProfile = nullptr;
+    // Profile* m_pProfile = nullptr;
 
-    QString m_psaleProfileName = "C:/Users/gaohuan/Documents/data/sale_data.csv";
+    // QString m_psaleProfileName = "C:/Users/gaohuan/Documents/data/sale_data.csv";
+
+    QStandardItemModel* m_pTableViewModel = nullptr;
 };
 
 #endif // SALEPRODUCT_H

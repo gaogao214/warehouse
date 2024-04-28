@@ -30,6 +30,7 @@ public:
     void setSQLTable(QString name,QString time,int price ,int num,int price_count);
     QSqlTableModel*  getTableWidgetData();
 
+    void searchTableView(QString name);
 
 
 private:

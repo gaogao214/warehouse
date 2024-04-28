@@ -28,7 +28,7 @@ HEADERS += \
 
 include(product_sale/saleProduct.pri)
 include(product_strorage/product_strorage.pri)
-
+include(sql_tableview/sqltablewidget.pri)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
