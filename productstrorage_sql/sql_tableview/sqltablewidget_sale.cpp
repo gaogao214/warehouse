@@ -1,4 +1,4 @@
-﻿#include "sqltablewidget.h"
+﻿#include "sqltablewidget_sale.h"
 #include <QSqlDatabase>
 #include <QDebug>
 #include <QSqlQuery>
@@ -6,18 +6,18 @@
 #include <QSqlTableModel>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
-#include <QTableWidget>
+// #include <QTableWidget>
 
 #pragma execution_character_set("utf-8");
 
 #define QSQLTABLEMODEL_FLAG
 
-sqlTableWidget::sqlTableWidget()
+sqlTableWidgetSale::sqlTableWidgetSale()
 {
-    qDebug()<<"sqlTableWidget";
+
 }
 
-void sqlTableWidget::addSQLTablewidget(QString name,QString time,int price ,int num,int price_count)
+void sqlTableWidgetSale::addSQLTablewidget(QString name,QString time,int price ,int num,int price_count)
 {
     QSqlRecord record = model->record();
     record.setValue(0,name);//商品名称
@@ -28,16 +28,14 @@ void sqlTableWidget::addSQLTablewidget(QString name,QString time,int price ,int 
     model->insertRecord(model->rowCount(), record);//添加至Model
     model->submitAll();//提交
 
-
-
 }
 
-void sqlTableWidget::StrorageSQLTablewidgetShow()
+void sqlTableWidgetSale::SaleSQLTablewidgetShow()
 {
     //使用QSqlTableModel 方法
-    model = new QSqlTableModel(this);
+    model = new QSqlTableModel(this,saleDb);
 
-    model->setTable("strorage_products");
+    model->setTable("sale_products");
 
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
@@ -47,44 +45,45 @@ void sqlTableWidget::StrorageSQLTablewidgetShow()
     //查询整张表
     model->select();
 
-    settableWidgetData(model);
+    setSaletableWidgetData(model);
 }
 
-bool sqlTableWidget::connectStrorageSQL()
+bool sqlTableWidgetSale::connectSaleSQL()
 {
     //这条语句会打印:drivers ("QSQLITE", "QMYSQL", "QMYSQL3", "QODBC", "QODBC3", "QPSQL", "QPSQL7")本地的数据库
     qDebug() << "drivers" << QSqlDatabase::drivers();
     //======================================👇创建数据库==========================================================
     // 加载驱动：这里的驱动必须是上一句打印里面的完全一样，必须是大写，不然会报错：QSqlDatabase: QSQLITE driver not loaded
-    strorageDb = QSqlDatabase::addDatabase("QSQLITE");
+    saleDb = QSqlDatabase::addDatabase("QSQLITE","sqlite1");
 
-    strorageDb.setDatabaseName("./productDB.db"); // 建立链接（链接一个数据库文件）
-    qDebug()<<"strorageDb connectionname:"<<strorageDb.connectionName();
-    if(!strorageDb.open())
+    saleDb.setDatabaseName("./productSaleDB.db"); // 建立链接（链接一个数据库文件）
+     qDebug()<<"sale_connectionName:"<<saleDb.connectionName();
+
+    if(!saleDb.open())
     {
         return false;
-        qDebug()<<"Error: Failed to connect database." << strorageDb.lastError();
+        qDebug()<<"Error: Failed to connect database." << saleDb.lastError();
     }else
     {
-        // sql_query.exec("DROP TABLE strorage_products");        //先清空一下表
-        QSqlQuery sql_query(strorageDb);
+        // sql_query.exec("DROP TABLE sale_products");        //先清空一下表
+        QSqlQuery sql_query(saleDb);
         //创建一个students表,标题分别为id、name、score、class
-        sql_query.exec("CREATE TABLE strorage_products ("
+        sql_query.exec("CREATE TABLE sale_products ("
                        u8"商品名称 VARCHAR(40) NOT NULL, "
-                       u8"入库时间 VARCHAR(40) NOT NULL, "
-                       u8"入库价格 INTEGER NOT NULL, "
-                       u8"入库数量 INTEGER NOT NULL,"
-                       u8"入库总价 INTEGER NOT NULL)");
+                       u8"出库时间 VARCHAR(40) NOT NULL, "
+                       u8"售价 INTEGER NOT NULL, "
+                       u8"数量 INTEGER NOT NULL,"
+                       u8"总价 INTEGER NOT NULL)");
         //创建一个students表
         //========================================👆清空数据库－》创建student表========================================================
-        qDebug() << "Succeed to connect database strorage_products." ;
+        qDebug() << "Succeed to connect database sale_products." ;
 
         return true;
     }
 }
 
 //修改
-void sqlTableWidget::updateTableWidget(int row,QString name,QString time,int price ,int num,int price_count)
+void sqlTableWidgetSale::updateTableWidget(int row,QString name,QString time,int price ,int num,int price_count)
 {
     // if(name.isEmpty() || tatal <= 0)
     // {
@@ -110,26 +109,26 @@ void sqlTableWidget::updateTableWidget(int row,QString name,QString time,int pri
 }
 
 //删除选中行
-void sqlTableWidget::deleteTableWidget(int rowcur)
+void sqlTableWidgetSale::deleteTableWidget(int rowcur)
 {
     //使用QSqlTableModel 方法
     model->removeRow(rowcur);
     model->submitAll(); //否则提交，在数据库中删除改行
 }
 
-void sqlTableWidget::settableWidgetData(QSqlTableModel* model)
+void sqlTableWidgetSale::setSaletableWidgetData(QSqlTableModel* model)
 {
-    data_tablewidget = new QSqlTableModel(this);
-    data_tablewidget = model;
+    sale_data_tablewidget = new QSqlTableModel(this);
+    sale_data_tablewidget = model;
 }
 
-QSqlTableModel*  sqlTableWidget::getTableWidgetData()
+QSqlTableModel*  sqlTableWidgetSale::getSaleTableWidgetData()
 {
-    return data_tablewidget;
+    return sale_data_tablewidget;
 }
 
 //搜索
-void sqlTableWidget::searchTableView(QString name)
+void sqlTableWidgetSale::searchTableView(QString name)
 {
     QString product_name =  QString(u8"商品名称 = '%1'").arg(name);
     // QString date = QString("date = '%1'").arg(dateEdit->date().toString("yyyy-MM-dd"));
@@ -150,24 +149,38 @@ void sqlTableWidget::searchTableView(QString name)
     model->setFilter(strFilter);
     // ui->tableView->setModel(model);
     model->select();
-    settableWidgetData(model);
+    setSaletableWidgetData(model);
 }
 
-void sqlTableWidget::searchSQL(int search_flag)
+void sqlTableWidgetSale::searchSQL(int search_flag)
 {
+
     // m_future =QtConcurrent::run([this]() {
 
     if(QSqlDatabase::contains("qt_sql_default_connection"))
     {
-        strorageDb = QSqlDatabase::database("qt_sql_default_connection");
+        qDebug()<<"111111111111111111111111111";
+        connectSaleSQL();//连接不存在需要创建连接，添加数据库
+        // saleDb = QSqlDatabase::database("qt_sql_default_connection");
+        // QSqlQuery sql_query(saleDb);
+        // //创建一个students表,标题分别为id、name、score、class
+        // sql_query.exec("CREATE TABLE sale_products ("
+        //                u8"商品名称 VARCHAR(40) NOT NULL, "
+        //                u8"出库时间 VARCHAR(40) NOT NULL, "
+        //                u8"售价 INTEGER NOT NULL, "
+        //                u8"数量 INTEGER NOT NULL,"
+        //                u8"总价 INTEGER NOT NULL)");
+        // //创建一个students表
+
     }
     else
     {
+        qDebug()<<"111111111111111111111111112";
+
         // db = QSqlDatabase::addDatabase("QSQLITE");
-        connectStrorageSQL();//连接不存在需要创建连接，添加数据库
+        connectSaleSQL();//连接不存在需要创建连接，添加数据库
     }
-    StrorageSQLTablewidgetShow();
-    // });
+    SaleSQLTablewidgetShow();
 
 }
 

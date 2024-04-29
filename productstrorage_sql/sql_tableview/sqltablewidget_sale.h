@@ -1,5 +1,5 @@
-﻿#ifndef SQLTABLEWIDGET_H
-#define SQLTABLEWIDGET_H
+﻿#ifndef SQLTABLEWIDGETSALE_H
+#define SQLTABLEWIDGETSALE_H
 
 #include <QSqlQuery>
 #include <QStringList>
@@ -8,52 +8,46 @@
 #include <QObject>
 #include <QWidget>
 #include <QMetaObject>
-#pragma execution_character_set("utf-8");
+#include <QFuture>
+#include <QtConcurrent>
 
 #include "profile.h"
+#pragma execution_character_set("utf-8");
+
 using namespace sql_struct;
 
-class sqlTableWidget:public QWidget
+class sqlTableWidgetSale:public QWidget
 {
     Q_OBJECT
 public:
-    sqlTableWidget();
+    sqlTableWidgetSale();
 
 public:
     void addSQLTablewidget(QString name,QString time,int price ,int num,int price_count);
-    void SQLTablewidgetShow();
-    bool connectSQL();
+
+    void SaleSQLTablewidgetShow();
+    bool connectSaleSQL();
     void updateTableWidget(int row,QString name,QString time,int price ,int num,int price_count);
     void deleteTableWidget(int rowcur);
 
-    void settableWidgetData(QSqlTableModel* model);
-    void setSQLTable(QString name,QString time,int price ,int num,int price_count);
-    QSqlTableModel*  getTableWidgetData();
+    void setSaletableWidgetData(QSqlTableModel* model);
+    QSqlTableModel*  getSaleTableWidgetData();
 
     void searchTableView(QString name);
+
+    void searchSQL(int search_flag);
 
 
 private:
 
-    QSqlQuery sql_query;
-    // QSqlQuery query;
-    QSqlDatabase db;
 
-    QStringList names ;
-
-
-    QStringList clases;
-    QSqlQuery query;
+    QSqlDatabase strorageDb;
+    QSqlDatabase saleDb;
     QSqlTableModel *model;
-
-
-
     sql_struct::tableWidget_data data;
     QVector<sql_struct::tableWidget_data> data_vec;
-
-    QSqlTableModel* data_tablewidget;
-
-
+    // QSqlTableModel* data_tablewidget;
+    QSqlTableModel* sale_data_tablewidget = nullptr;
 };
 
-#endif // SQLTABLEWIDGET_H
+#endif // SQLTABLEWIDGET_SALE_H

@@ -15,7 +15,7 @@
 #include "product_sale/saleProduct.h"
 #include "inventory.h"
 #include "earnings.h"
-#include "sqltablewidget.h"
+#include "sql_tableview/sqltablewidget.h"
 
 #pragma execution_character_set("utf-8")
 

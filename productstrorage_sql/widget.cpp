@@ -86,16 +86,15 @@ void Widget::initNav()
 //初始化mainwindows右侧
 void Widget::initMain()
 {
+    m_pstrorageProduct = new productStrorage();
     m_psaleProduct= new saleproduct();
     m_pinventory = new inventory();
-    m_pstrorageProduct = new productStrorage();
     stackedWidget->addWidget(m_pstrorageProduct);
     stackedWidget->addWidget(m_psaleProduct);
     stackedWidget->addWidget(m_pinventory);
     stackedWidget->addWidget(new earnings());
 
-
-    connect(m_psaleProduct,&saleproduct::sig_flushTableitem,m_pinventory,&inventory::tableWidgetFlush);
+    // connect(m_psaleProduct,&saleproduct::sig_flushTableitem,m_pinventory,&inventory::tableWidgetFlush);
     connect(m_pstrorageProduct,&productStrorage::sig_flushTableitem,m_pinventory,&inventory::tableWidgetFlush);
 }
 

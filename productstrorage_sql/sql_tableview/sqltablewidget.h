@@ -8,6 +8,9 @@
 #include <QObject>
 #include <QWidget>
 #include <QMetaObject>
+#include <QFuture>
+#include <QtConcurrent>
+
 #pragma execution_character_set("utf-8");
 
 #include "profile.h"
@@ -21,37 +24,31 @@ public:
 
 public:
     void addSQLTablewidget(QString name,QString time,int price ,int num,int price_count);
-    void SQLTablewidgetShow();
-    bool connectSQL();
+    void StrorageSQLTablewidgetShow();
+    bool connectStrorageSQL();
     void updateTableWidget(int row,QString name,QString time,int price ,int num,int price_count);
     void deleteTableWidget(int rowcur);
 
     void settableWidgetData(QSqlTableModel* model);
-    void setSQLTable(QString name,QString time,int price ,int num,int price_count);
     QSqlTableModel*  getTableWidgetData();
 
     void searchTableView(QString name);
 
+    void searchSQL(int search_flag);
+
 
 private:
 
-    QSqlQuery sql_query;
-    // QSqlQuery query;
-    QSqlDatabase db;
 
-    QStringList names ;
-
-
-    QStringList clases;
-    QSqlQuery query;
+    QSqlDatabase strorageDb;
+    QSqlDatabase saleDb;
     QSqlTableModel *model;
-
-
-
     sql_struct::tableWidget_data data;
     QVector<sql_struct::tableWidget_data> data_vec;
-
     QSqlTableModel* data_tablewidget;
+    // QSqlTableModel* sale_data_tablewidget;
+
+    QFuture<void> m_future;
 
 
 };

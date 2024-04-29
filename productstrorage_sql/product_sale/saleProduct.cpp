@@ -136,187 +136,97 @@ saleproduct::saleproduct() {
     //     readProfileTableWidget(strlist);
     // });
 
-    // m_pProfile->readProfile(m_psaleProfileName,1);
-
-
+    qDebug()<<"saleproduct thread id:"<<QThread::currentThreadId();
+    sql_sale= new sqlTableWidgetSale();//初始化数据库
+    sql_sale->searchSQL(2);
+    tableWidgetShow();
 }
 
 //添加按钮 添加数据到tableWidget
 void saleproduct::addProductTableWidget()
 {
 
-    // addproduct* product = new addproduct();
+    addproduct* product = new addproduct();
 
-    // connect(product,&addproduct::sig_saveAddProduct,this,[this](QString name,QString time,QString price,QString num){
+    connect(product,&addproduct::sig_saveAddProduct,this,[this](QString name,QString time,QString price,QString num){
 
-
-    //     int RowCont;
-    //     RowCont=m_ptable_strorage->rowCount();
-    //     m_ptable_strorage->insertRow(RowCont);//增加一行
-
-    //     m_ptable_strorage->setItem(RowCont,0,new QTableWidgetItem(name));
-    //     m_ptable_strorage->setItem(RowCont,1,new QTableWidgetItem(time));
-    //     m_ptable_strorage->setItem(RowCont,2,new QTableWidgetItem(price));
-    //     m_ptable_strorage->setItem(RowCont,3,new QTableWidgetItem(num));
-    //     float count = price.toFloat() * num.toInt();
-    //     m_ptable_strorage->setItem(RowCont,4,new QTableWidgetItem(QString::number(count)));
-
-    //     m_pProfile->writeProfile(m_psaleProfileName,name,time,price,num,QString::number(count));
-
+        float count = price.toFloat() * num.toInt();
+        sql_sale->addSQLTablewidget(name,time,price.toInt(),num.toInt(),count);
+        tableWidgetShow();
     //     emit sig_flushTableitem();
-    // });
+    });
 
-    // product->show();
+    product->show();
 
 }
 
 
 //修改按钮
 void saleproduct::amendproductTableWidget()
-
 {
-    // addproduct* product = nullptr;
+    addproduct* product = nullptr;//修改属性页面
 
-    // QList<QTableWidgetItem*> items = m_ptable_strorage->selectedItems();
-    // int select_row = 0;
-    // if(!items.empty()){
-    //     product = new addproduct();
+    QItemSelectionModel *select = m_ptable_strorage->selectionModel();
 
-    //     product->setProductProperty(items.at(0)->text(),items.at(1)->text(),items.at(2)->text(),items.at(3)->text());
+    QModelIndexList list = select->selectedIndexes();
+    if(!list.empty()){
+        select_row = select->selectedRows().first().row();
+        qDebug()<<"selectedIndexes"<<select->selectedRows().first().row();
+        qDebug()<<"list.size:"<<list.size();
+        product = new addproduct();
+        QStringList strlist;
+        //tableview 获取选中行的内容
+        for(int i = 0; i < list.size();i++)
+        {
+            qDebug()<<"list["<<i<<"]: "<<list[i].model()->data(list[i]).value<QString>();
+            strlist.push_back(list[i].model()->data(list[i]).value<QString>());
 
-    //     select_row =items.at(0)->row();
-    //     qDebug()<<"select_row :"<<select_row;
+        }
+        product->setProductProperty(strlist[0],strlist[1],strlist[2],strlist[3]);//没修改之前在属性页面显示
+        connect(product,&addproduct::sig_saveAddProduct,this,[this](QString name,QString time,QString price,QString num){
 
-    //     connect(product,&addproduct::sig_saveAddProduct,this,[this,select_row](QString name,QString time,QString price,QString num){
+            float count = price.toFloat() * num.toInt();
+            sql_sale->updateTableWidget(select_row,name,time,price.toInt(),num.toInt(),QString::number(count).toInt());
+            tableWidgetShow();
+            // emit sig_flushTableitem();//刷新库存和收益界面
+        });
+        product->show();
+    }else{
 
-    //         // int RowCont;
-    //         // RowCont=m_ptable_strorage->rowCount();
-    //         // m_ptable_strorage->insertRow(RowCont);//增加一行
-
-    //         m_ptable_strorage->setItem(select_row,0,new QTableWidgetItem(name));
-    //         m_ptable_strorage->setItem(select_row,1,new QTableWidgetItem(time));
-    //         m_ptable_strorage->setItem(select_row,2,new QTableWidgetItem(price));
-    //         m_ptable_strorage->setItem(select_row,3,new QTableWidgetItem(num));
-    //         float count = price.toFloat() * num.toInt();
-    //         m_ptable_strorage->setItem(select_row,4,new QTableWidgetItem(QString::number(count)));
-
-    //         QTextStream strList ;
-
-    //         qDebug()<<"m_ptable_strorage->columnCount():"<<m_ptable_strorage->columnCount()<<"\n";
-    //         qDebug()<<"m_ptable_strorage->rowCount():"<<m_ptable_strorage->rowCount()<<"\n";
-    //         m_pProfile->clearProfile(m_psaleProfileName);
-    //         for(int i = 0;i<m_ptable_strorage->rowCount();++i)
-    //         {
-    //             QString name = m_ptable_strorage->item(i,0)->text();
-    //             QString time = m_ptable_strorage->item(i,1)->text();
-    //             QString price = m_ptable_strorage->item(i,2)->text();
-    //             QString num = m_ptable_strorage->item(i,3)->text();
-    //             QString price_num = m_ptable_strorage->item(i,4)->text();
-
-    //             qDebug()<<name<<time<<price<<num<<price_num;
-
-    //             m_pProfile->writeProfile(m_psaleProfileName,name,time,price,num,price_num);
-
-    //         }
-    //         emit sig_flushTableitem();
-    //     });
-
-    //     product->show();
-
-    // }
-    // else{
-
-    //     QMessageBox::warning(this,"警告","请先选择一行再进行操作");
-    // }
+        QMessageBox::warning(this,"警告","请先选择一行再进行操作");
+    }
 }
 
 void saleproduct::removeTableWidget()
 {
-    // QList<QTableWidgetItem*> items = m_ptable_strorage->selectedItems();
-
-    // if(!items.empty()){
-
-    //     auto message=QMessageBox::warning(this,"提示","是否删除本行数据");
-
-    //     int delete_row = items.at(0)->row();
-    //     //如确认删除
-    //     if(message == QMessageBox::Ok)
-    //     {
-    //         m_ptable_strorage->removeRow(delete_row);  //删除掉了表格信息
-
-    //         qDebug()<<"rowcount:"<<m_ptable_strorage->rowCount();
-    //         // if(m_ptable_strorage->rowCount()!=0)
-    //             m_pProfile->clearProfile(m_psaleProfileName);
-
-    //         for(int i = 0;i<m_ptable_strorage->rowCount();++i)
-    //         {
-    //             QString name = m_ptable_strorage->item(i,0)->text();
-    //             QString time = m_ptable_strorage->item(i,1)->text();
-    //             QString price = m_ptable_strorage->item(i,2)->text();
-    //             QString num = m_ptable_strorage->item(i,3)->text();
-    //             QString price_num = m_ptable_strorage->item(i,4)->text();
-
-    //             qDebug()<<"sale"<<name<<time<<price<<num<<price_num;
-
-    //             m_pProfile->writeProfile(m_psaleProfileName,name,time,price,num,price_num);
-    //         }
-    //     }
-    //     emit sig_flushTableitem();
-    // }
-    // else{
-
-    //     QMessageBox::warning(this,"警告","请先选择一行再进行操作");
-    // }
+    QItemSelectionModel *select = m_ptable_strorage->selectionModel();
+    QModelIndexList list = select->selectedIndexes();
+    if(!list.empty()){
+        auto message = QMessageBox::warning(this,"提示","是否删除本行数据");
+        if(message== QMessageBox::Ok)
+        {
+            select_row = select->selectedRows().first().row();
+            qDebug()<<"selectedIndexes"<<select->selectedRows().first().row();
+            qDebug()<<"list.size:"<<list.size();
+            sql_sale->deleteTableWidget(select_row);
+            tableWidgetShow();
+        }
+    }else{
+        QMessageBox::warning(this,"警告","请先选择一行再进行操作");
+    }
 }
 
+//搜索商品名称
 void saleproduct::searchTableWidget()
 {
-    // QString input_name=m_pname_lineedit->text();
-    // int row_num=m_ptable_strorage->rowCount();
-    // if (input_name=="")//判断是否是空，如果是空就显示所有行
-    // {
-    //     for(int i=0;i<row_num;i++)
-    //     {
-    //         m_ptable_strorage->setRowHidden(i,false);//为false就是显示
-    //     }
-    // }
-    // else
-    // {
-    //     //找到符合条件的索引 是通过你输入的和表格里面所有内容进行比对
-    //     QList <QTableWidgetItem *> item = m_ptable_strorage->findItems(m_pname_lineedit->text(), Qt::MatchContains);
-    //     //然后把所有行都隐藏
-    //     for(int i=0;i<row_num;i++)
-    //     {
-    //         m_ptable_strorage->setRowHidden(i,true);//隐藏
-
-    //     }
-    //     //判断符合条件索引是不是空
-    //     if(!item.empty())
-    //     {
-    //         //恢复对应的行
-    //         for(int i=0;i<item.count();i++)
-    //         {
-    //             m_ptable_strorage->setRowHidden(item.at(i)->row(),false);//回复对应的行，也可以回复列
-
-    //         }
-    //     }
-    // }
+    qDebug()<<"m_pname_lineedit->text()"<<m_pname_lineedit->text();
+    sql_sale->searchTableView( m_pname_lineedit->text());
+    tableWidgetShow();
 }
-
-//打开软件，把配置文件的内容读取到tablewidget
-void saleproduct::readProfileTableWidget(QStringList strlist)
+//============================👇软件启动读取数据库内容======================
+void saleproduct::tableWidgetShow()
 {
-    // int count = strlist.count();
-    // int RowCont;
-    // RowCont=m_ptable_strorage->rowCount();
-    // m_ptable_strorage->insertRow(RowCont);//增加一行
-
-    // // qDebug()<<"count:"<<count;
-    // for(int i = 0; i < count ;i++)
-    // {
-
-    //     // qDebug()<<"strlist:"<<strlist[i];
-    //     m_ptable_strorage->setItem(RowCont,i,new QTableWidgetItem(strlist[i]));
-
-    // }
+    tablewidget_data = sql_sale->getSaleTableWidgetData();
+    m_ptable_strorage->setModel(tablewidget_data);
 }
+//============================👆软件启动读取数据库内容======================

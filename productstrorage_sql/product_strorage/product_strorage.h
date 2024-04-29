@@ -11,9 +11,11 @@
 #include <QComboBox>
 #include <QTableWidget>
 #include <QStandardItemModel>
+#include <QFuture>
+
 #include "add_product.h"
 #include "profile.h"
-#include "sqltablewidget.h"
+#include "sql_tableview/sqltablewidget.h"
 
 #pragma execution_character_set("utf-8")
 
@@ -26,8 +28,8 @@ public:
     productStrorage();
 
 signals:
-    void sig_flushTableitem();
-
+    void sig_flushTableitem(QString name,int num);
+    void sig_searchSQL(int flag);
 private:
     void amendproductTableWidget();//修改
     void removeTableWidget();//删除
@@ -53,11 +55,9 @@ private:
     QStandardItemModel* m_pTableViewModel     = nullptr;//tableview 添加模型
 
     sqlTableWidget* sql_ = nullptr;
-
     QSqlTableModel* tablewidget_data = nullptr; // 数据库model
-
     int selete_row = 0;//tableview 选中的行数
-
+    QFuture<void> m_future;
 };
 
 #endif // PRODUCTSTRORAGE_H

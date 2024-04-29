@@ -23,7 +23,7 @@ public:
 public slots:
     void tableWidgetShow();
 
-    void tableWidgetFlush();
+    void tableWidgetFlush(QString name,int num);
 
 private:
     QPushButton* m_pbutton_amend = nullptr;//修改

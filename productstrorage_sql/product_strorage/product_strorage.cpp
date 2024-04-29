@@ -133,9 +133,10 @@ productStrorage::productStrorage()
     connect(m_psearch_pushbutton,&QPushButton::clicked,this,[this](){
         searchTableWidget();
     });
+    qDebug()<<"productStrorage thread id:"<<QThread::currentThreadId();
 
     sql_= new sqlTableWidget();//初始化数据库
-
+    sql_->searchSQL(1);
     tableWidgetShow();
 }
 
@@ -146,13 +147,12 @@ void productStrorage::addProductTableWidget()
 
     connect(product,&addproduct::sig_saveAddProduct,this,[this](QString name,QString time,QString price,QString num){
 
-#ifdef QSQLTABLE
         float count = price.toFloat() * num.toInt();
         sql_->addSQLTablewidget(name,time,price.toInt(),num.toInt(),count);
         tableWidgetShow();
-#elif
-//     emit sig_flushTableitem();//刷新库存和收益界面
-#endif
+
+        emit sig_flushTableitem(name,num.toInt());//刷新库存和收益界面
+
     });
 
     product->show();

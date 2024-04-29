@@ -8,15 +8,12 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QComboBox>
-// #include <QTableWidget>
 #include <QTableView>
 #include <QHeaderView>
 #include <QStandardItemModel>
-
+#include "sql_tableview/sqltablewidget_sale.h"
 #include "add_product.h"
-#include "profile.h"
-
-#pragma execution_character_set("utf-8")
+#pragma execution_character_set("utf-8");
 
 class saleproduct:public QWidget
 {
@@ -28,10 +25,11 @@ public:
     void amendproductTableWidget();
     void removeTableWidget();
     void searchTableWidget();
-    void readProfileTableWidget(QStringList strlist);
+    void tableWidgetShow();
 
 signals:
     void sig_flushTableitem();
+    void sig_searchSQL(int flag);
 private:
     QPushButton* m_pbutton_add = nullptr;//添加产品
     QPushButton* m_pbutton_amend = nullptr;//修改
@@ -46,12 +44,13 @@ private:
 
     QTableView* m_ptable_strorage = nullptr;//入库表格
 
-
-    // Profile* m_pProfile = nullptr;
-
-    // QString m_psaleProfileName = "C:/Users/gaohuan/Documents/data/sale_data.csv";
-
     QStandardItemModel* m_pTableViewModel = nullptr;
+
+    QSqlTableModel* tablewidget_data = nullptr; // 数据库model
+
+    sqlTableWidgetSale* sql_sale = nullptr;
+
+    int select_row = 0;
 };
 
 #endif // SALEPRODUCT_H

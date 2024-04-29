@@ -1,6 +1,7 @@
 QT       += core gui
 QT       += axcontainer
 QT       += sql
+QT       += concurrent
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -15,7 +16,7 @@ SOURCES += \
     inventory.cpp \
     main.cpp \
     profile.cpp \
-    sqltablewidget.cpp \
+    # sqltablewidget.cpp \
     widget.cpp
 
 HEADERS += \
@@ -23,7 +24,7 @@ HEADERS += \
     earnings.h \
     inventory.h \
     profile.h \
-    sqltablewidget.h \
+    # sqltablewidget.h \
     widget.h
 
 include(product_sale/saleProduct.pri)
