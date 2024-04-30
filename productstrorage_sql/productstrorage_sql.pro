@@ -2,7 +2,16 @@ QT       += core gui
 QT       += axcontainer
 QT       += sql
 QT       += concurrent
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+DEFINES += ELPP_QT_LOGGING    \
+          ELPP_FEATURE_ALL \
+          ELPP_STL_LOGGING   \
+          ELPP_STRICT_SIZE_CHECK ELPP_UNICODE \
+          ELPP_MULTI_LOGGER_SUPPORT \
+          ELPP_THREAD_SAFE\
+          ELPP_UNICODE
 
 CONFIG += c++17
 
@@ -17,12 +26,14 @@ SOURCES += \
     main.cpp \
     profile.cpp \
     # sqltablewidget.cpp \
-    widget.cpp
+    widget.cpp\
+    src/easylogging++.cc
 
 HEADERS += \
     add_product.h \
     # earnings.h \
     # inventory.h \
+    easylogging++.h \
     profile.h \
     # sqltablewidget.h \
     widget.h
