@@ -12,8 +12,8 @@ CONFIG += c++17
 
 SOURCES += \
     add_product.cpp \
-    earnings.cpp \
-    inventory.cpp \
+    # earnings.cpp \
+    # inventory.cpp \
     main.cpp \
     profile.cpp \
     # sqltablewidget.cpp \
@@ -21,8 +21,8 @@ SOURCES += \
 
 HEADERS += \
     add_product.h \
-    earnings.h \
-    inventory.h \
+    # earnings.h \
+    # inventory.h \
     profile.h \
     # sqltablewidget.h \
     widget.h
@@ -30,6 +30,8 @@ HEADERS += \
 include(product_sale/saleProduct.pri)
 include(product_strorage/product_strorage.pri)
 include(sql_tableview/sqltablewidget.pri)
+include(inventory/inventory.pri)
+include(earnings/earnings.pri)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

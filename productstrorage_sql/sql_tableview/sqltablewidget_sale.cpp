@@ -32,10 +32,12 @@ void sqlTableWidgetSale::addSQLTablewidget(QString name,QString time,int price ,
 
 void sqlTableWidgetSale::SaleSQLTablewidgetShow()
 {
+    qDebug()<<"sqlTableWidgetSale::SaleSQLTablewidgetShow()";
     //使用QSqlTableModel 方法
     model = new QSqlTableModel(this,saleDb);
 
     model->setTable("sale_products");
+
 
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
@@ -152,32 +154,14 @@ void sqlTableWidgetSale::searchTableView(QString name)
     setSaletableWidgetData(model);
 }
 
-void sqlTableWidgetSale::searchSQL(int search_flag)
+void sqlTableWidgetSale::searchSQL()
 {
-
-    // m_future =QtConcurrent::run([this]() {
-
     if(QSqlDatabase::contains("qt_sql_default_connection"))
     {
-        qDebug()<<"111111111111111111111111111";
         connectSaleSQL();//连接不存在需要创建连接，添加数据库
-        // saleDb = QSqlDatabase::database("qt_sql_default_connection");
-        // QSqlQuery sql_query(saleDb);
-        // //创建一个students表,标题分别为id、name、score、class
-        // sql_query.exec("CREATE TABLE sale_products ("
-        //                u8"商品名称 VARCHAR(40) NOT NULL, "
-        //                u8"出库时间 VARCHAR(40) NOT NULL, "
-        //                u8"售价 INTEGER NOT NULL, "
-        //                u8"数量 INTEGER NOT NULL,"
-        //                u8"总价 INTEGER NOT NULL)");
-        // //创建一个students表
-
     }
     else
     {
-        qDebug()<<"111111111111111111111111112";
-
-        // db = QSqlDatabase::addDatabase("QSQLITE");
         connectSaleSQL();//连接不存在需要创建连接，添加数据库
     }
     SaleSQLTablewidgetShow();

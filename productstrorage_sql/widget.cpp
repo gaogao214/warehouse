@@ -86,16 +86,22 @@ void Widget::initNav()
 //初始化mainwindows右侧
 void Widget::initMain()
 {
-    m_pstrorageProduct = new productStrorage();
-    m_psaleProduct= new saleproduct();
-    m_pinventory = new inventory();
+    m_pinventory = new inventory();//库存页面
+    m_pstrorageProduct = new productStrorage();//入库界面
+    m_psaleProduct= new saleproduct();//出库界面
+    m_pearing = new earnings();//收益界面
+
     stackedWidget->addWidget(m_pstrorageProduct);
     stackedWidget->addWidget(m_psaleProduct);
     stackedWidget->addWidget(m_pinventory);
-    stackedWidget->addWidget(new earnings());
+    stackedWidget->addWidget(m_pearing);
 
-    // connect(m_psaleProduct,&saleproduct::sig_flushTableitem,m_pinventory,&inventory::tableWidgetFlush);
-    connect(m_pstrorageProduct,&productStrorage::sig_flushTableitem,m_pinventory,&inventory::tableWidgetFlush);
+    connect(m_psaleProduct,&saleproduct::sig_flushTableitem,m_pinventory,&inventory::SaleTableWidgetFlush);
+    connect(m_pstrorageProduct,&productStrorage::sig_flushStrorageTableitem,m_pinventory,&inventory::StrorageTableWidgetFlush);
+    connect(m_psaleProduct,&saleproduct::sig_flushTableitem,m_pearing,&earnings::SaleTableWidgetEarnings);
+    connect(m_pstrorageProduct,&productStrorage::sig_flushStrorageTableitem,m_pearing,&earnings::StrorageTableWidgetEarnings);
+    m_pstrorageProduct->setInventoryData();
+    m_psaleProduct->setInventoryData();
 }
 
 //哪个左侧按钮被按下，右侧就显示哪个界面

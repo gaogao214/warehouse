@@ -13,8 +13,8 @@
 
 #include "product_strorage/product_strorage.h"
 #include "product_sale/saleProduct.h"
-#include "inventory.h"
-#include "earnings.h"
+#include "inventory/inventory.h"
+#include "earnings/earnings.h"
 #include "sql_tableview/sqltablewidget.h"
 
 #pragma execution_character_set("utf-8")

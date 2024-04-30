@@ -26,9 +26,10 @@ public:
     void removeTableWidget();
     void searchTableWidget();
     void tableWidgetShow();
+    void setInventoryData();
 
 signals:
-    void sig_flushTableitem();
+    void sig_flushTableitem(QSqlTableModel* tablewidget_data);
     void sig_searchSQL(int flag);
 private:
     QPushButton* m_pbutton_add = nullptr;//添加产品

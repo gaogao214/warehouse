@@ -34,7 +34,7 @@ public:
 
     void searchTableView(QString name);
 
-    void searchSQL(int search_flag);
+    void searchSQL();
 
 
 private:

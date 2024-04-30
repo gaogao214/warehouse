@@ -136,8 +136,9 @@ productStrorage::productStrorage()
     qDebug()<<"productStrorage thread id:"<<QThread::currentThreadId();
 
     sql_= new sqlTableWidget();//初始化数据库
-    sql_->searchSQL(1);
+    sql_->searchSQL();
     tableWidgetShow();
+
 }
 
 //===========================👇添加按钮===============================
@@ -151,7 +152,7 @@ void productStrorage::addProductTableWidget()
         sql_->addSQLTablewidget(name,time,price.toInt(),num.toInt(),count);
         tableWidgetShow();
 
-        emit sig_flushTableitem(name,num.toInt());//刷新库存和收益界面
+        setInventoryData();//刷新库存和收益界面
 
     });
 
@@ -185,7 +186,7 @@ void productStrorage::amendproductTableWidget()
             float count = price.toFloat() * num.toInt();
             sql_->updateTableWidget(selete_row,name,time,price.toInt(),num.toInt(),QString::number(count).toInt());
             tableWidgetShow();
-            // emit sig_flushTableitem();//刷新库存和收益界面
+            setInventoryData();//刷新库存和收益界面
         });
 
         product->show();
@@ -209,6 +210,7 @@ void productStrorage::removeTableWidget()
             qDebug()<<"list.size:"<<list.size();
             sql_->deleteTableWidget(selete_row);
             tableWidgetShow();
+            setInventoryData();//刷新库存和收益界面
         }
     }else{
         QMessageBox::warning(this,"警告","请先选择一行再进行操作");
@@ -231,3 +233,8 @@ void productStrorage::tableWidgetShow()
     m_ptable_strorage->setModel(tablewidget_data);
 }
 //============================👆软件启动读取数据库内容======================
+
+void productStrorage::setInventoryData()
+{
+    emit sig_flushStrorageTableitem(tablewidget_data);//刷新库存和收益界面
+}

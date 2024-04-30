@@ -119,33 +119,16 @@ saleproduct::saleproduct() {
 
     vlayout->addWidget(m_ptable_strorage);
     //=====================================👆创建tableview===================================================
-    //=====================================👇创建QTableWidget===================================================
-    // m_ptable_strorage = new QTableWidget();
-    // m_ptable_strorage->resize(900,500);
-    // // m_ptable_strorage->setRowCount(6);//行数
-    // m_ptable_strorage->setColumnCount(5);//列数
-    // m_ptable_strorage->setSelectionBehavior(QAbstractItemView::SelectRows);//整行选中的方式
-    // m_ptable_strorage->setEditTriggers(QAbstractItemView::NoEditTriggers);//禁止修改
-
-    // m_ptable_strorage->setHorizontalHeaderLabels(QStringList()<<"商品名称"<<"出库时间"<<"售价"<<"数量"<<"总价");
-    // vlayout->addWidget(m_ptable_strorage);
-//=====================================👆创建QTableWidget===================================================
-    // m_pProfile = new Profile();
-
-    // connect(m_pProfile,&Profile::sig_readSaleProfile,this,[this](QStringList strlist){
-    //     readProfileTableWidget(strlist);
-    // });
 
     qDebug()<<"saleproduct thread id:"<<QThread::currentThreadId();
     sql_sale= new sqlTableWidgetSale();//初始化数据库
-    sql_sale->searchSQL(2);
+    sql_sale->searchSQL();
     tableWidgetShow();
 }
 
 //添加按钮 添加数据到tableWidget
 void saleproduct::addProductTableWidget()
 {
-
     addproduct* product = new addproduct();
 
     connect(product,&addproduct::sig_saveAddProduct,this,[this](QString name,QString time,QString price,QString num){
@@ -153,13 +136,12 @@ void saleproduct::addProductTableWidget()
         float count = price.toFloat() * num.toInt();
         sql_sale->addSQLTablewidget(name,time,price.toInt(),num.toInt(),count);
         tableWidgetShow();
-    //     emit sig_flushTableitem();
+        setInventoryData();//刷新库存界面和收益界面
     });
 
     product->show();
 
 }
-
 
 //修改按钮
 void saleproduct::amendproductTableWidget()
@@ -188,7 +170,7 @@ void saleproduct::amendproductTableWidget()
             float count = price.toFloat() * num.toInt();
             sql_sale->updateTableWidget(select_row,name,time,price.toInt(),num.toInt(),QString::number(count).toInt());
             tableWidgetShow();
-            // emit sig_flushTableitem();//刷新库存和收益界面
+            setInventoryData();//刷新库存和收益界面
         });
         product->show();
     }else{
@@ -210,6 +192,7 @@ void saleproduct::removeTableWidget()
             qDebug()<<"list.size:"<<list.size();
             sql_sale->deleteTableWidget(select_row);
             tableWidgetShow();
+            setInventoryData();//刷新库存和收益界面
         }
     }else{
         QMessageBox::warning(this,"警告","请先选择一行再进行操作");
@@ -219,7 +202,7 @@ void saleproduct::removeTableWidget()
 //搜索商品名称
 void saleproduct::searchTableWidget()
 {
-    qDebug()<<"m_pname_lineedit->text()"<<m_pname_lineedit->text();
+    qDebug()<<"搜索商品名称"<<m_pname_lineedit->text();
     sql_sale->searchTableView( m_pname_lineedit->text());
     tableWidgetShow();
 }
@@ -230,3 +213,9 @@ void saleproduct::tableWidgetShow()
     m_ptable_strorage->setModel(tablewidget_data);
 }
 //============================👆软件启动读取数据库内容======================
+
+void saleproduct::setInventoryData()
+{
+    emit sig_flushTableitem(tablewidget_data);
+}
+

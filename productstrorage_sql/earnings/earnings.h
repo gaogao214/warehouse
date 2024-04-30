@@ -9,9 +9,11 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QComboBox>
-#include <QTableWidget>
+#include <QTableView>
 #include <QDebug>
-
+#include <QSqlTableModel>
+#include <QHeaderView>
+#include <QStandardItemModel>
 #include "profile.h"
 #pragma execution_character_set("utf-8")
 //收益报表
@@ -21,7 +23,10 @@ class earnings:public QWidget
 public:
     earnings();
 
+public slots:
     void tableWidgetEarnings();
+    void StrorageTableWidgetEarnings(QSqlTableModel* tablewidget_data);
+    void SaleTableWidgetEarnings(QSqlTableModel* tablewidget_data);
 
 private:
     QPushButton* m_pbutton_add = nullptr;//添加产品
@@ -35,18 +40,19 @@ private:
 
     QComboBox* m_pdate_combobox = nullptr;//添加日期
 
-    QTableWidget* m_ptable_strorage = nullptr;//入库表格
+    QTableView* m_ptable_strorage = nullptr;//入库表格
+    QStandardItemModel* m_pTableViewModel     = nullptr;//tableview 添加模型
 
 
-    Profile* m_pProfile = nullptr;
+    // Profile* m_pProfile = nullptr;
 
-    QString m_pstrorageProfileName = "C:/Users/gaohuan/Documents/data/strorage_data.csv";
-    QString m_psaleProfileName = "C:/Users/gaohuan/Documents/data/sale_data.csv";
+    // QString m_pstrorageProfileName = "C:/Users/gaohuan/Documents/data/strorage_data.csv";
+    // QString m_psaleProfileName = "C:/Users/gaohuan/Documents/data/sale_data.csv";
 
     struct inventory_property
     {
         QString name;
-        QString price;
+        float price;
         QString num;
         QString time;
         int row;
@@ -57,7 +63,9 @@ private:
 
     QVector<inventory_property> m_pstrorageVector;
     QVector<inventory_property> m_psaleVector;
-    QVector<inventory_property> m_ptableWidgetVector;
+    QMap<QString,QVector<float>> m_ptableWidgetMap;
+
+    QString m_ptime ;
 };
 
 #endif // EARNINGS_H

@@ -28,13 +28,16 @@ public:
     productStrorage();
 
 signals:
-    void sig_flushTableitem(QString name,int num);
+    void sig_flushStrorageTableitem(QSqlTableModel* tablewidget_data);
     void sig_searchSQL(int flag);
 private:
     void amendproductTableWidget();//修改
     void removeTableWidget();//删除
     void searchTableWidget();//搜索
     void tableWidgetShow(); //数据库显示在tableview
+
+public:
+    void setInventoryData();
 
 private slots:
     void addProductTableWidget();  //添加按钮

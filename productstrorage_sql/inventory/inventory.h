@@ -8,9 +8,12 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QComboBox>
-#include <QTableWidget>
+#include <QTableview>
 #include <QVector>
-
+#include <QSqlTableModel>
+#include <QAbstractTableModel>
+#include <QStandardItemModel>
+#include <QHeaderView>
 #include "profile.h"
 #pragma execution_character_set("utf-8")
 //库存
@@ -23,7 +26,8 @@ public:
 public slots:
     void tableWidgetShow();
 
-    void tableWidgetFlush(QString name,int num);
+    void StrorageTableWidgetFlush(QSqlTableModel* tablewidget_data);
+    void SaleTableWidgetFlush(QSqlTableModel* tablewidget_data);
 
 private:
     QPushButton* m_pbutton_amend = nullptr;//修改
@@ -34,8 +38,8 @@ private:
 
     QComboBox* m_pdate_combobox = nullptr;//添加日期
 
-    QTableWidget* m_ptable_strorage = nullptr;//入库表格
-
+    QTableView* m_ptable_strorage = nullptr;//入库表格
+    QStandardItemModel* m_pTableViewModel     = nullptr;//tableview 添加模型
 
     Profile* m_pProfile = nullptr;
 
@@ -50,7 +54,7 @@ private:
     struct inventory_property
     {
         QString name;
-        QString num;
+        int num;
         int row;
     };
     inventory_property m_pstrorageInventory;

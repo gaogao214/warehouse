@@ -14,7 +14,7 @@
 
 sqlTableWidget::sqlTableWidget()
 {
-    qDebug()<<"sqlTableWidget";
+
 }
 
 void sqlTableWidget::addSQLTablewidget(QString name,QString time,int price ,int num,int price_count)
@@ -153,10 +153,8 @@ void sqlTableWidget::searchTableView(QString name)
     settableWidgetData(model);
 }
 
-void sqlTableWidget::searchSQL(int search_flag)
+void sqlTableWidget::searchSQL()
 {
-    // m_future =QtConcurrent::run([this]() {
-
     if(QSqlDatabase::contains("qt_sql_default_connection"))
     {
         strorageDb = QSqlDatabase::database("qt_sql_default_connection");
@@ -167,8 +165,6 @@ void sqlTableWidget::searchSQL(int search_flag)
         connectStrorageSQL();//连接不存在需要创建连接，添加数据库
     }
     StrorageSQLTablewidgetShow();
-    // });
-
 }
 
 
